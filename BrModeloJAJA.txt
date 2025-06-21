@@ -1,0 +1,358 @@
+/* Lógico_1: */
+
+CREATE TABLE Cliente (
+    IdCliente INTEGER PRIMARY KEY,
+    NomeCliente VARCHAR,
+    CpfCliente CHAR,
+    TelefoneCliente CHAR,
+    RuaCliente VARCHAR,
+    CidadeCliente VARCHAR,
+    EstadoCliente VARCHAR,
+    HistoricoVeiculoCliente VARCHAR,
+    UNIQUE (CpfCliente, TelefoneCliente)
+);
+
+CREATE TABLE Veiculo (
+    IdVeiculo INTEGER PRIMARY KEY,
+    PlacaVeiculo VARCHAR,
+    ModeloVeiculo VARCHAR,
+    AnoVeiculo VARCHAR,
+    ChassiVeiculo CHAR,
+    CorVeiculo VARCHAR,
+    KilometragemVeiculo FLOAT,
+    HistoricoServicoVeiculo VARCHAR,
+    UNIQUE (ChassiVeiculo, PlacaVeiculo)
+);
+
+CREATE TABLE Funcionario (
+    IdFuncionario INTEGER PRIMARY KEY,
+    NomeFuncionario VARCHAR,
+    CpfFuncionario CHAR UNIQUE,
+    CargoFuncionario VARCHAR,
+    SalarioFuncionario FLOAT,
+    DataDeAdmissaoFuncionario DATETIME,
+    EspecializacaoDoFuncionario VARCHAR
+);
+
+CREATE TABLE servico (
+    IdServico INTEGER PRIMARY KEY,
+    NomeServico VARCHAR,
+    DescricaoServico VARCHAR,
+    PrecoServico FLOAT,
+    TipoServico VARCHAR,
+    TempoEstimadoServico VARCHAR
+);
+
+CREATE TABLE OrdemServico (
+    IdOrdemServico INTEGER PRIMARY KEY,
+    NumeroOrdemServico INTEGER,
+    DataAberturaOrdemServico DATETIME,
+    DataFechamentoOrdemServico DATETIME,
+    ClienteOrdemServico VARCHAR,
+    VeiculoOrdemServico VARCHAR,
+    ListaServicoOrdemServico VARCHAR,
+    DiagnosticoOrdemServico VARCHAR,
+    PecaUtilizadaOrdemServico VARCHAR,
+    StatusOrdemServico VARCHAR,
+    ValorTotalOrdemServico FLOAT,
+    FuncionarioResponsavelOrdemServico VARCHAR
+);
+
+CREATE TABLE peca (
+    IdPeca INTEGER PRIMARY KEY,
+    CodigoPeca INTEGER,
+    NomePeca VARCHAR UNIQUE,
+    DescricaoPeca VARCHAR,
+    FabricantePeca VARCHAR,
+    FornecedorPeca VARCHAR,
+    PrecoDeCustoPeca FLOAT,
+    PrecoDeVendaPeca FLOAT,
+    QuantidadeEmEstoquePeca INTEGER,
+    UnidadeDeMedidaPeca INTEGER,
+    PontoDeReposicaoPeca VARCHAR,
+    GarantiaDaPeca VARCHAR
+);
+
+CREATE TABLE Fornecedor (
+    IdFornecedor INTEGER PRIMARY KEY,
+    NomeEmpresaFornecedor VARCHAR,
+    CnpjFornecedor CHAR,
+    RuaFornecedor VARCHAR,
+    CidadeFornecedor VARCHAR,
+    EstadoFornecedor VARCHAR,
+    TelefoneFornecedor INTEGER,
+    EmailFornecedor VARCHAR,
+    GarantiaFornecedor VARCHAR,
+    UNIQUE (CnpjFornecedor, EmailFornecedor, TelefoneFornecedor)
+);
+
+CREATE TABLE Estoque (
+    IdEstoque INTEGER PRIMARY KEY,
+    CodigoPecaEstoque VARCHAR UNIQUE,
+    QuantidadeEstoque INTEGER,
+    LocalizacaoEstoque VARCHAR
+);
+
+CREATE TABLE Agendamento (
+    IdAgendamento INTEGER PRIMARY KEY,
+    DataHoraAgendamento DATETIME,
+    ClienteAgendamento VARCHAR,
+    VeiculoAgendamento VARCHAR,
+    ServicoAgendamento VARCHAR,
+    FuncionarioDesignadoAgendamento VARCHAR,
+    StatusAgendamento VARCHAR
+);
+
+CREATE TABLE Pagamento (
+    IdPagamento INTEGER PRIMARY KEY,
+    NumeroOSPagamento INTEGER,
+    DataPagamento DATE,
+    HoraPagamento VARCHAR,
+    ValorPagoPagamento VARCHAR,
+    FormaPagamento VARCHAR,
+    InformacoesPagamento VARCHAR,
+    InformacoesAdicionaisPagamento VARCHAR
+);
+
+CREATE TABLE ItemOrdemServico (
+    IdItemOrdemServico INTEGER PRIMARY KEY,
+    NumeroItemOrdemServico INTEGER,
+    CodigoPecaItemOrdemServico VARCHAR UNIQUE,
+    DescricaoItemOrdemServico VARCHAR,
+    ValorUnitarioItemOrdemServico FLOAT,
+    ValorTotalItemOrdemServico FLOAT
+);
+
+CREATE TABLE LaudoTecnico (
+    IdLaudoTecnico INTEGER PRIMARY KEY,
+    NumeroLaudoTecnico VARCHAR,
+    NumeroOSRelacionadaLaudoTecnico VARCHAR,
+    DataLaudoTecnico DATETIME,
+    DescricaoLaudoTecnico VARCHAR,
+    RecomendacaoFuncionarioResponsavelLaudoTecnico VARCHAR,
+    UNIQUE (NumeroLaudoTecnico, NumeroOSRelacionadaLaudoTecnico)
+);
+
+CREATE TABLE UsuarioSistema (
+    IdUsuarioSistema INTEGER PRIMARY KEY,
+    LoginUsuarioSistema VARCHAR,
+    SenhaUsuarioSistema VARCHAR,
+    NivelAcessoUsuarioSistema VARCHAR,
+    FuncionarioRelacionadoUsuarioSistema VARCHAR,
+    UNIQUE (LoginUsuarioSistema, SenhaUsuarioSistema)
+);
+
+CREATE TABLE FluxoCaixa (
+    IdFluxoCaixa INTEGER PRIMARY KEY,
+    DataHoraFluxoCaixa DATETIME,
+    TipoFluxoCaixa VARCHAR,
+    DescricaoFluxoCaixa VARCHAR,
+    ValorFluxoCaixa FLOAT,
+    MeioPagamentoFluxoCaixa VARCHAR
+);
+
+CREATE TABLE CompraPeca (
+    IdCompraPeca INTEGER PRIMARY KEY,
+    NumeroPedidoCompraPeca CHAR,
+    DataPedidoCompraPeca DATETIME,
+    ValorTotalCompraPeca FLOAT,
+    StatusCompraPeca VARCHAR,
+    DataRecebimentoCompraPeca DATETIME,
+    NumeroNotaFiscalCompraPeca INTEGER,
+    FornecedorCompraPeca VARCHAR
+);
+
+CREATE TABLE Ter (
+    fk_Veiculo_IdVeiculo INTEGER,
+    fk_Cliente_IdCliente INTEGER
+);
+
+CREATE TABLE Possuir (
+    fk_OrdemServico_IdOrdermServico INTEGER,
+    fk_Veiculo_IdVeiculo INTEGER
+);
+
+CREATE TABLE Associar (
+    fk_OrdemServico_IdOrdermServico INTEGER,
+    fk_Funcionario_IdFuncionario INTEGER
+);
+
+CREATE TABLE Precisar (
+    fk_OrdemServico_IdOrdermServico INTEGER,
+    fk_ItemOrdemServico_IdItemOrdemServico INTEGER
+);
+
+CREATE TABLE Usar (
+    fk_ItemOrdemServico_IdItemOrdemServico INTEGER,
+    fk_peca_IdPeca INTEGER
+);
+
+CREATE TABLE Obter (
+    fk_Estoque_IdEstoque INTEGER,
+    fk_peca_IdPeca INTEGER
+);
+
+CREATE TABLE Realizar (
+    fk_Funcionario_IdFuncionario INTEGER,
+    fk_servico_IdServico INTEGER
+);
+
+CREATE TABLE Fazer (
+    fk_Funcionario_IdFuncionario INTEGER,
+    fk_LaudoTecnico_IdLaudoTecnico INTEGER
+);
+
+CREATE TABLE Utiliza (
+    fk_FluxoCaixa_IdFluxoCaixa INTEGER,
+    fk_UsuarioSistema_IdUsuarioSistema INTEGER
+);
+
+CREATE TABLE Selecionar (
+    fk_FluxoCaixa_IdFluxoCaixa INTEGER,
+    fk_Pagamento_IdPagamento INTEGER
+);
+
+CREATE TABLE Comprar (
+    fk_UsuarioSistema_IdUsuarioSistema INTEGER,
+    fk_CompraPeca_IdCompraPeca INTEGER
+);
+
+CREATE TABLE Solicitar (
+    fk_CompraPeca_IdCompraPeca INTEGER,
+    fk_Fornecedor_IdFornecedor INTEGER
+);
+
+CREATE TABLE Agendar (
+    fk_Agendamento_IdAgendamento INTEGER,
+    fk_Cliente_IdCliente INTEGER
+);
+ 
+ALTER TABLE Ter ADD CONSTRAINT FK_Ter_1
+    FOREIGN KEY (fk_Veiculo_IdVeiculo)
+    REFERENCES Veiculo (IdVeiculo)
+    ON DELETE RESTRICT;
+ 
+ALTER TABLE Ter ADD CONSTRAINT FK_Ter_2
+    FOREIGN KEY (fk_Cliente_IdCliente)
+    REFERENCES Cliente (IdCliente)
+    ON DELETE SET NULL;
+ 
+ALTER TABLE Possuir ADD CONSTRAINT FK_Possuir_1
+    FOREIGN KEY (fk_OrdemServico_IdOrdermServico)
+    REFERENCES OrdemServico (IdOrdemServico)
+    ON DELETE RESTRICT;
+ 
+ALTER TABLE Possuir ADD CONSTRAINT FK_Possuir_2
+    FOREIGN KEY (fk_Veiculo_IdVeiculo)
+    REFERENCES Veiculo (IdVeiculo)
+    ON DELETE SET NULL;
+ 
+ALTER TABLE Associar ADD CONSTRAINT FK_Associar_1
+    FOREIGN KEY (fk_OrdemServico_IdOrdermServico)
+    REFERENCES OrdemServico (IdOrdemServico)
+    ON DELETE RESTRICT;
+ 
+ALTER TABLE Associar ADD CONSTRAINT FK_Associar_2
+    FOREIGN KEY (fk_Funcionario_IdFuncionario)
+    REFERENCES Funcionario (IdFuncionario)
+    ON DELETE RESTRICT;
+ 
+ALTER TABLE Precisar ADD CONSTRAINT FK_Precisar_1
+    FOREIGN KEY (fk_OrdemServico_IdOrdermServico)
+    REFERENCES OrdemServico (IdOrdemServico)
+    ON DELETE RESTRICT;
+ 
+ALTER TABLE Precisar ADD CONSTRAINT FK_Precisar_2
+    FOREIGN KEY (fk_ItemOrdemServico_IdItemOrdemServico)
+    REFERENCES ItemOrdemServico (IdItemOrdemServico)
+    ON DELETE RESTRICT;
+ 
+ALTER TABLE Usar ADD CONSTRAINT FK_Usar_1
+    FOREIGN KEY (fk_ItemOrdemServico_IdItemOrdemServico)
+    REFERENCES ItemOrdemServico (IdItemOrdemServico)
+    ON DELETE RESTRICT;
+ 
+ALTER TABLE Usar ADD CONSTRAINT FK_Usar_2
+    FOREIGN KEY (fk_peca_IdPeca)
+    REFERENCES peca (IdPeca)
+    ON DELETE RESTRICT;
+ 
+ALTER TABLE Obter ADD CONSTRAINT FK_Obter_1
+    FOREIGN KEY (fk_Estoque_IdEstoque)
+    REFERENCES Estoque (IdEstoque)
+    ON DELETE RESTRICT;
+ 
+ALTER TABLE Obter ADD CONSTRAINT FK_Obter_2
+    FOREIGN KEY (fk_peca_IdPeca)
+    REFERENCES peca (IdPeca)
+    ON DELETE RESTRICT;
+ 
+ALTER TABLE Realizar ADD CONSTRAINT FK_Realizar_1
+    FOREIGN KEY (fk_Funcionario_IdFuncionario)
+    REFERENCES Funcionario (IdFuncionario)
+    ON DELETE RESTRICT;
+ 
+ALTER TABLE Realizar ADD CONSTRAINT FK_Realizar_2
+    FOREIGN KEY (fk_servico_IdServico)
+    REFERENCES servico (IdServico)
+    ON DELETE RESTRICT;
+ 
+ALTER TABLE Fazer ADD CONSTRAINT FK_Fazer_1
+    FOREIGN KEY (fk_Funcionario_IdFuncionario)
+    REFERENCES Funcionario (IdFuncionario)
+    ON DELETE SET NULL;
+ 
+ALTER TABLE Fazer ADD CONSTRAINT FK_Fazer_2
+    FOREIGN KEY (fk_LaudoTecnico_IdLaudoTecnico)
+    REFERENCES LaudoTecnico (IdLaudoTecnico)
+    ON DELETE SET NULL;
+ 
+ALTER TABLE Utiliza ADD CONSTRAINT FK_Utiliza_1
+    FOREIGN KEY (fk_FluxoCaixa_IdFluxoCaixa)
+    REFERENCES FluxoCaixa (IdFluxoCaixa)
+    ON DELETE RESTRICT;
+ 
+ALTER TABLE Utiliza ADD CONSTRAINT FK_Utiliza_2
+    FOREIGN KEY (fk_UsuarioSistema_IdUsuarioSistema)
+    REFERENCES UsuarioSistema (IdUsuarioSistema)
+    ON DELETE SET NULL;
+ 
+ALTER TABLE Selecionar ADD CONSTRAINT FK_Selecionar_1
+    FOREIGN KEY (fk_FluxoCaixa_IdFluxoCaixa)
+    REFERENCES FluxoCaixa (IdFluxoCaixa)
+    ON DELETE RESTRICT;
+ 
+ALTER TABLE Selecionar ADD CONSTRAINT FK_Selecionar_2
+    FOREIGN KEY (fk_Pagamento_IdPagamento)
+    REFERENCES Pagamento (IdPagamento)
+    ON DELETE RESTRICT;
+ 
+ALTER TABLE Comprar ADD CONSTRAINT FK_Comprar_1
+    FOREIGN KEY (fk_UsuarioSistema_IdUsuarioSistema)
+    REFERENCES UsuarioSistema (IdUsuarioSistema)
+    ON DELETE RESTRICT;
+ 
+ALTER TABLE Comprar ADD CONSTRAINT FK_Comprar_2
+    FOREIGN KEY (fk_CompraPeca_IdCompraPeca)
+    REFERENCES CompraPeca (IdCompraPeca)
+    ON DELETE RESTRICT;
+ 
+ALTER TABLE Solicitar ADD CONSTRAINT FK_Solicitar_1
+    FOREIGN KEY (fk_CompraPeca_IdCompraPeca)
+    REFERENCES CompraPeca (IdCompraPeca)
+    ON DELETE SET NULL;
+ 
+ALTER TABLE Solicitar ADD CONSTRAINT FK_Solicitar_2
+    FOREIGN KEY (fk_Fornecedor_IdFornecedor)
+    REFERENCES Fornecedor (IdFornecedor)
+    ON DELETE SET NULL;
+ 
+ALTER TABLE Agendar ADD CONSTRAINT FK_Agendar_1
+    FOREIGN KEY (fk_Agendamento_IdAgendamento)
+    REFERENCES Agendamento (IdAgendamento)
+    ON DELETE RESTRICT;
+ 
+ALTER TABLE Agendar ADD CONSTRAINT FK_Agendar_2
+    FOREIGN KEY (fk_Cliente_IdCliente)
+    REFERENCES Cliente (IdCliente)
+    ON DELETE SET NULL;
